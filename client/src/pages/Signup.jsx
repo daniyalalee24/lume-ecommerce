@@ -83,7 +83,7 @@ function Signup() {
               value={formData.name}
               onChange={handleChange}
               required
-              placeholder="Jane Doe"
+              placeholder="Your Full Name"
               className="mt-2 w-full appearance-none border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 transition-all duration-200 ease-in-out hover:border-gray-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-sm"
             />
           </div>
