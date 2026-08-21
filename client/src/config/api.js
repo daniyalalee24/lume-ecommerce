@@ -1,3 +1,3 @@
-const API_URL = "http://localhost:5000";
+const API_URL = "lume-server-six.vercel.app";
 
 export default API_URL;
