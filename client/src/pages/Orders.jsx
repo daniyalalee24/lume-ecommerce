@@ -1,6 +1,7 @@
 // Client Dashboard
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import { useAuth } from "../context/AuthContext";
 import API_URL from "../config/api";
 
@@ -10,6 +11,10 @@ function Orders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  // title
+
+  useDocumentTitle("Dashboard | LUMÉ");
 
   useEffect(() => {
     const fetchOrders = async () => {

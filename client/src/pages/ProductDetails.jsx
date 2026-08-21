@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import { useCart } from "../context/CartContext";
 import API_URL from "../config/api";
 
@@ -11,6 +12,10 @@ function ProductDetails() {
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
+
+  // title
+
+  useDocumentTitle("Product | LUMÉ");
 
   useEffect(() => {
     fetch(`${API_URL}/api/products/${id}`)

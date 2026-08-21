@@ -1,4 +1,6 @@
+import useDocumentTitle from "../hooks/useDocumentTitle";
 function About() {
+  useDocumentTitle("About | LUMÉ");
   return (
     <main>
       {/* Hero */}

@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import { useAuth } from "../context/AuthContext";
 import API_URL from "../config/api";
 
 function Signup() {
+  useDocumentTitle("Sign up | LUMÉ");
   const navigate = useNavigate();
   const { login } = useAuth();
 

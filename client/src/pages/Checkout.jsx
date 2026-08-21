@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import API_URL from "../config/api";
@@ -9,6 +10,8 @@ function Checkout() {
 
   const { cartItems, clearCart } = useCart();
   const { token } = useAuth();
+
+  useDocumentTitle("Checkout | LUMÉ");
 
   const [formData, setFormData] = useState({
     fullName: "",

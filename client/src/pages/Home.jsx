@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import API_URL from "../config/api";
 
 function Home() {
@@ -23,6 +24,10 @@ function Home() {
 
     fetchProducts();
   }, []);
+
+  // for title
+
+  useDocumentTitle("Home | LUMÉ");
 
   return (
     <main>

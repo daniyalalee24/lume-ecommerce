@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import ProductCard from "../components/ProductCard";
 import API_URL from "../config/api";
 
 function Shop() {
+  useDocumentTitle("Shop | LUMÉ");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");

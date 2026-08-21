@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 function Cart() {
+  useDocumentTitle("My Cart | LUMÉ");
+
   const { cartItems, removeFromCart, updateQuantity } = useCart();
 
   const subtotal = cartItems.reduce(

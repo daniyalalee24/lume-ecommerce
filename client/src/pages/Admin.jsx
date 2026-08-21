@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import ProductForm from "../components/ProductForm";
 import ProductList from "../components/ProductList";
 import OrderManagement from "../components/OrderManagement";
@@ -7,6 +8,8 @@ import API_URL from "../config/api";
 
 function Admin() {
   const { token } = useAuth();
+
+  useDocumentTitle("Admin Panel | LUMÉ");
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);

@@ -1,7 +1,12 @@
 import { Link, useParams } from "react-router-dom";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 function OrderSuccess() {
   const { id } = useParams();
+
+  // title
+
+  useDocumentTitle("Completed | LUMÉ");
 
   return (
     <main className="flex min-h-[70vh] items-center justify-center px-6 py-16">
