@@ -93,67 +93,6 @@ function About() {
           </div>
         </div>
       </section>
-
-      {/* FAQ */}
-      <section className="mx-auto max-w-4xl px-6 py-20 md:py-28">
-        <div className="text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gray-400">
-            FAQ
-          </p>
-
-          <h2 className="mt-4 text-3xl font-light tracking-tight text-gray-900">
-            Frequently asked questions
-          </h2>
-        </div>
-
-        <div className="mt-12 divide-y divide-gray-200 border-y border-gray-200">
-          <div className="py-6">
-            <h3 className="font-medium text-gray-900">
-              How can I track my order?
-            </h3>
-
-            <p className="mt-3 text-sm leading-relaxed text-gray-600">
-              You can view your order details and current order status from your
-              account's orders page.
-            </p>
-          </div>
-
-          <div className="py-6">
-            <h3 className="font-medium text-gray-900">
-              Can I cancel my order?
-            </h3>
-
-            <p className="mt-3 text-sm leading-relaxed text-gray-600">
-              Orders can be cancelled while they are still eligible for
-              cancellation. Once an order has been processed or shipped,
-              cancellation may no longer be available.
-            </p>
-          </div>
-
-          <div className="py-6">
-            <h3 className="font-medium text-gray-900">
-              What payment methods do you accept?
-            </h3>
-
-            <p className="mt-3 text-sm leading-relaxed text-gray-600">
-              We currently offer Cash on Delivery and a demo card payment
-              option.
-            </p>
-          </div>
-
-          <div className="py-6">
-            <h3 className="font-medium text-gray-900">
-              How long does delivery take?
-            </h3>
-
-            <p className="mt-3 text-sm leading-relaxed text-gray-600">
-              Delivery times can vary depending on your location and order
-              processing. Your order status will be updated as it moves through
-              the delivery process.
-            </p>
-          </div>
-        </div>
-      </section>
     </main>
   );
 }
