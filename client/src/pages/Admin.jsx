@@ -4,7 +4,13 @@ import useDocumentTitle from "../hooks/useDocumentTitle";
 import ProductForm from "../components/ProductForm";
 import ProductList from "../components/ProductList";
 import OrderManagement from "../components/OrderManagement";
-import API_URL from "../config/api";
+
+import {
+  getProducts,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+} from "../api/products";
 
 function Admin() {
   const { token } = useAuth();
@@ -32,12 +38,7 @@ function Admin() {
   // Fetch products
   const fetchProducts = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/products`);
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
+      const data = await getProducts();
 
       setProducts(data);
     } catch (error) {

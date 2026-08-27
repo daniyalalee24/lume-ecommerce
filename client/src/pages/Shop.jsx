@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import ProductCard from "../components/ProductCard";
-import API_URL from "../config/api";
+import { getProducts } from "../api/products";
 
 function Shop() {
   useDocumentTitle("Shop | LUMÉ");
@@ -14,13 +14,7 @@ function Shop() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/products`);
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message);
-        }
+        const data = await getProducts();
 
         setProducts(data);
       } catch (error) {
