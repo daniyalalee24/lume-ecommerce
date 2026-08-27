@@ -4,6 +4,7 @@ import useDocumentTitle from "../hooks/useDocumentTitle";
 import ProductForm from "../components/ProductForm";
 import ProductList from "../components/ProductList";
 import OrderManagement from "../components/OrderManagement";
+import API_URL from "../config/api";
 
 import {
   getProducts,
