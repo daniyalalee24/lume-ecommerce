@@ -4,7 +4,6 @@ import useDocumentTitle from "../hooks/useDocumentTitle";
 import ProductForm from "../components/ProductForm";
 import ProductList from "../components/ProductList";
 import OrderManagement from "../components/OrderManagement";
-import API_URL from "../config/api";
 
 import {
   getProducts,
@@ -13,17 +12,19 @@ import {
   deleteProduct,
 } from "../api/products";
 
+import { getOrders, updateOrderStatus } from "../api/orders";
+
 function Admin() {
   const { token } = useAuth();
 
   useDocumentTitle("Admin Panel | LUMÉ");
 
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); //
   const [error, setError] = useState("");
 
   const [orders, setOrders] = useState([]);
-  const [ordersLoading, setOrdersLoading] = useState(true);
+  const [ordersLoading, setOrdersLoading] = useState(true); //
 
   const [formData, setFormData] = useState({
     name: "",
@@ -52,16 +53,7 @@ function Admin() {
   // Fetch all orders
   const fetchOrders = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/orders`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
+      const data = await getOrders(token);
 
       setOrders(data);
     } catch (error) {
@@ -107,6 +99,7 @@ function Admin() {
     setEditingId(null);
   };
 
+  // If we are editing an existing product, update it. Otherwise, create a new product.
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
@@ -117,24 +110,10 @@ function Admin() {
         price: Number(formData.price),
       };
 
-      const url = editingId
-        ? `${API_URL}/api/products/${editingId}`
-        : `${API_URL}/api/products`;
-      const method = editingId ? "PUT" : "POST";
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(productData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message);
+      if (editingId) {
+        await updateProduct(editingId, productData, token);
+      } else {
+        await createProduct(productData, token);
       }
 
       resetForm();
@@ -162,27 +141,18 @@ function Admin() {
     });
   };
 
+  // for handling delete
   const handleDelete = async (id) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this product?",
     );
 
     if (!confirmed) return;
+
     setError("");
 
     try {
-      const response = await fetch(`${API_URL}/api/products/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
+      await deleteProduct(id, token);
 
       fetchProducts();
     } catch (error) {
@@ -190,24 +160,12 @@ function Admin() {
     }
   };
 
-  const updateOrderStatus = async (orderId, status) => {
+  // Handle the user's action, call the API, handle errors, and refresh the UI.
+  const handleOrderStatusUpdate = async (orderId, status) => {
     setError("");
 
     try {
-      const response = await fetch(`${API_URL}/api/orders/${orderId}/status`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ status }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
+      await updateOrderStatus(token, orderId, status);
 
       fetchOrders();
     } catch (error) {
@@ -284,7 +242,7 @@ function Admin() {
       <OrderManagement
         orders={orders}
         ordersLoading={ordersLoading}
-        updateOrderStatus={updateOrderStatus}
+        onStatusUpdate={handleOrderStatusUpdate}
       />
     </main>
   );

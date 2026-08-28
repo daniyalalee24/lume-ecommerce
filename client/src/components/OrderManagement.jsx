@@ -1,5 +1,5 @@
 // admin order management UI
-function OrderManagement({ orders, ordersLoading, updateOrderStatus }) {
+function OrderManagement({ orders, ordersLoading, onStatusUpdate }) {
   return (
     <section className="mt-20">
       <div className="flex items-end justify-between border-b border-gray-200 pb-5">
@@ -77,7 +77,7 @@ function OrderManagement({ orders, ordersLoading, updateOrderStatus }) {
                   <select
                     value={order.status}
                     onChange={(event) =>
-                      updateOrderStatus(order._id, event.target.value)
+                      onStatusUpdate(order._id, event.target.value)
                     }
                     className="w-full cursor-pointer appearance-none rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-900 transition-colors hover:border-gray-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
                   >
