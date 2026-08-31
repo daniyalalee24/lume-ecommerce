@@ -21,7 +21,8 @@ const app = express();
 // Middleware
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    // .trim() removes any accidental invisible spaces/newlines
+    origin: process.env.CLIENT_URL ? process.env.CLIENT_URL.trim() : "",
     credentials: true,
   }),
 );
