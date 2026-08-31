@@ -6,6 +6,7 @@ function ProductForm({
   onSizeChange,
   onSubmit,
   onCancel,
+  isSubmitting,
 }) {
   const inputStyles =
     "mt-2 w-full appearance-none rounded-sm border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 transition-all duration-200 ease-in-out hover:border-gray-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-sm";
@@ -165,16 +166,24 @@ function ProductForm({
         <div className="flex flex-wrap items-center gap-4 md:col-span-2">
           <button
             type="submit"
-            className="bg-black px-8 py-3.5 text-sm font-medium uppercase tracking-widest text-white transition-all duration-200 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+            disabled={isSubmitting}
+            className="bg-black px-8 py-3.5 text-sm font-medium uppercase tracking-widest text-white transition-all duration-200 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {editingId ? "Update Product" : "Add Product"}
+            {isSubmitting
+              ? editingId
+                ? "Updating..."
+                : "Adding..."
+              : editingId
+                ? "Update Product"
+                : "Add Product"}
           </button>
 
           {editingId && (
             <button
               type="button"
               onClick={onCancel}
-              className="border border-gray-300 px-8 py-3.5 text-sm font-medium uppercase tracking-widest text-gray-700 transition-colors duration-200 hover:bg-gray-50"
+              disabled={isSubmitting}
+              className="border border-gray-300 px-8 py-3.5 text-sm font-medium uppercase tracking-widest text-gray-700 transition-colors duration-200 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
               Cancel
             </button>

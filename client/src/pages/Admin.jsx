@@ -36,6 +36,7 @@ function Admin() {
   });
 
   const [editingId, setEditingId] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Fetch products
   const fetchProducts = async () => {
@@ -102,7 +103,11 @@ function Admin() {
   // If we are editing an existing product, update it. Otherwise, create a new product.
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (isSubmitting) return;
+
     setError("");
+    setIsSubmitting(true);
 
     try {
       const productData = {
@@ -120,6 +125,8 @@ function Admin() {
       fetchProducts();
     } catch (error) {
       setError(error.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -173,16 +180,6 @@ function Admin() {
     }
   };
 
-  if (loading) {
-    return (
-      <main className="mx-auto flex min-h-[60vh] max-w-6xl items-center justify-center px-6 py-20">
-        <p className="animate-pulse text-sm font-medium uppercase tracking-widest text-gray-400">
-          Loading dashboard...
-        </p>
-      </main>
-    );
-  }
-
   return (
     <main className="mx-auto max-w-6xl px-6 py-12 md:py-16">
       {/* Header */}
@@ -229,11 +226,13 @@ function Admin() {
         onSizeChange={handleSizeChange}
         onSubmit={handleSubmit}
         onCancel={resetForm}
+        isSubmitting={isSubmitting}
       />
 
       {/* Product List */}
       <ProductList
         products={products}
+        loading={loading}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
