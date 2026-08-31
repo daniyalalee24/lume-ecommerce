@@ -12,9 +12,6 @@ LUMÉ is a full-stack e-commerce web application built with the MERN stack. It i
 - Node.js
 - Express.js
 - MongoDB
-- Mongoose
-- JWT
-- bcrypt
 
 ## Features
 
