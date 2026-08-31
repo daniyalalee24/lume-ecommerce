@@ -1,16 +1,19 @@
 # Dependencies
 node_modules/
-client/node_modules/
-server/node_modules/
 
 # Environment variables & credentials
 .env
-*.env
-.atlas-credentials.env
-.vscode
+.env.*
+!.env.example
+
+# Editor files
+.vscode/
 
 # Build outputs & logs
 dist/
 build/
 *.log
+
+# OS files
 .DS_Store
+Thumbs.db
