@@ -7,6 +7,9 @@ function ProductForm({
   onSubmit,
   onCancel,
   isSubmitting,
+  imagePreview,
+  uploadingImage,
+  onImageFileChange,
 }) {
   const inputStyles =
     "mt-2 w-full appearance-none rounded-sm border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 transition-all duration-200 ease-in-out hover:border-gray-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-sm";
@@ -127,18 +130,29 @@ function ProductForm({
             htmlFor="image"
             className="block text-sm font-medium text-gray-700"
           >
-            Image URL
+            Product Image
           </label>
 
           <input
             id="image"
             name="image"
-            value={formData.image}
-            onChange={onChange}
-            required
-            placeholder="https://..."
+            type="file"
+            accept="image/*"
+            onChange={onImageFileChange}
             className={inputStyles}
           />
+
+          {imagePreview && (
+            <img
+              src={imagePreview}
+              alt="Preview"
+              className="mt-4 h-40 w-32 rounded-sm object-cover"
+            />
+          )}
+
+          {uploadingImage && (
+            <p className="mt-2 text-xs text-gray-500">Uploading image...</p>
+          )}
         </div>
 
         {/* Description */}

@@ -3,13 +3,29 @@ const Product = require("../models/Product");
 // @desc    Get all products
 const getProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const { category, search, page = 1, limit = 9 } = req.query;
 
-    res.json(products);
-  } catch (error) {
-    res.status(500).json({
-      message: "Failed to fetch products",
+    const filter = {};
+    if (category && category !== "All") filter.category = category;
+    if (search) filter.name = { $regex: search, $options: "i" }; // case-insensitive partial match
+
+    const pageNumber = Number(page);
+    const pageSize = Number(limit);
+
+    const totalProducts = await Product.countDocuments(filter);
+    const products = await Product.find(filter)
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize);
+
+    res.json({
+      products,
+      page: pageNumber,
+      totalPages: Math.ceil(totalProducts / pageSize),
+      totalProducts,
     });
+  } catch (error) {
+    console.error("Get products error:", error.message);
+    res.status(500).json({ message: "Failed to fetch products" });
   }
 };
 

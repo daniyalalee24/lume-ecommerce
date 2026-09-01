@@ -1,4 +1,5 @@
 const Order = require("../models/Order");
+const Product = require("../models/Product");
 
 // @desc    Create a new order
 const createOrder = async (req, res) => {
@@ -14,6 +15,28 @@ const createOrder = async (req, res) => {
     ) {
       return res.status(400).json({
         message: "Please provide all order details",
+      });
+    }
+
+    // Validate stock for every item BEFORE creating anything (avoid partial orders)
+    for (const item of items) {
+      const product = await Product.findById(item.product);
+      if (!product) {
+        return res
+          .status(404)
+          .json({ message: `Product not found: ${item.name}` });
+      }
+      if (product.stock < item.quantity) {
+        return res.status(400).json({
+          message: `Not enough stock for "${product.name}". Only ${product.stock} left.`,
+        });
+      }
+    }
+
+    // Now decrement stock for each item
+    for (const item of items) {
+      await Product.findByIdAndUpdate(item.product, {
+        $inc: { stock: -item.quantity },
       });
     }
 
@@ -133,6 +156,13 @@ const cancelOrder = async (req, res) => {
     if (order.status === "Cancelled") {
       return res.status(400).json({
         message: "This order is already cancelled",
+      });
+    }
+
+    // Restore stock for every cancelled item
+    for (const item of order.items) {
+      await Product.findByIdAndUpdate(item.product, {
+        $inc: { stock: item.quantity },
       });
     }
 

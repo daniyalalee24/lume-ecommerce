@@ -1,15 +1,14 @@
 import API_URL from "../config/api";
 
 // api for fetching products
-export const getProducts = async () => {
-  const response = await fetch(`${API_URL}/api/products`);
+export const getProducts = async (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  const response = await fetch(
+    `${API_URL}/api/products${query ? `?${query}` : ""}`,
+  );
   const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || "Failed to fetch products");
-  }
-
-  return data;
+  if (!response.ok) throw new Error(data.message || "Failed to fetch products");
+  return data; // { products, page, totalPages, totalProducts }
 };
 
 // Admin product api's

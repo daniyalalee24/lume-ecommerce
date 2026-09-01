@@ -1,16 +1,44 @@
-# React + Vite
+# LUMÉ — Full-Stack E-Commerce Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack e-commerce application built with the MERN stack, covering the
+complete shopping flow — browsing, cart, checkout, order tracking — plus an
+admin dashboard for product and order management.
 
-Currently, two official plugins are available:
+**Live demo:** [link]
+**Video walkthrough / screenshots:** [link or embed]
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- JWT-based authentication with role-based access (customer vs. admin)
+- Product browsing with server-side search, category filtering, and pagination
+- Cart and checkout flow with order placement and stock validation
+- Order history for customers, with cancellation support
+- Admin dashboard: create/edit/delete products with Cloudinary image upload,
+  manage order statuses
+- Server-side input validation and centralized error handling
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+**Frontend:** React 19, Vite, Tailwind CSS, React Router
+**Backend:** Node.js, Express, MongoDB, Mongoose
+**Auth:** JWT
+**Image hosting:** Cloudinary (via Multer)
+**Deployment:** Vercel (client + server as separate projects)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Getting Started
+
+1. Clone the repo and install dependencies in both `client/` and `server/`
+2. Copy `server/.env.example` to `server/.env` and fill in your MongoDB URI,
+   JWT secret, and Cloudinary credentials
+3. `npm run dev` in `server/`, `npm run dev` in `client/`
+4. Optional: `npm run seed` in `server/` to load sample products
+
+## What I'd improve next
+
+- Atomic stock decrement to fully prevent overselling under concurrent orders
+- Automated tests (Jest/Supertest) for auth and order flows
+- Refresh-token flow instead of a flat 7-day JWT
+
+## Author
+
+Daniyal Ali — [LinkedIn] — [portfolio/GitHub]

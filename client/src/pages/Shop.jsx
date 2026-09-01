@@ -9,37 +9,42 @@ function Shop() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchInput, setSearchInput] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  // fetch all products
+  // Debounce: wait 400ms after typing stops before actually searching
+  useEffect(() => {
+    const timer = setTimeout(() => setSearchTerm(searchInput), 400);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  // Reset to page 1 whenever the filters change
+  useEffect(() => {
+    setPage(1);
+  }, [selectedCategory, searchTerm]);
+
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
       try {
-        const data = await getProducts();
-
-        setProducts(data);
+        const data = await getProducts({
+          category: selectedCategory,
+          search: searchTerm,
+          page,
+          limit: 9,
+        });
+        setProducts(data.products);
+        setTotalPages(data.totalPages);
       } catch (error) {
         setError(error.message);
       } finally {
         setLoading(false);
       }
     };
-
     fetchProducts();
-  }, []);
-
-  // Filter products based on selectedCategory
-  const filteredProducts =
-    selectedCategory === "All"
-      ? products
-      : products.filter((product) => product.category === selectedCategory);
-
-  if (loading) {
-    return (
-      <main className="mx-auto max-w-7xl px-6 py-20">
-        <p className="text-gray-500">Loading collection...</p>
-      </main>
-    );
-  }
+  }, [selectedCategory, searchTerm, page]);
 
   if (error) {
     return (
@@ -49,61 +54,85 @@ function Shop() {
     );
   }
 
-  // UI
   return (
     <main className="mx-auto max-w-7xl px-6 py-12">
-      {/* Header */}
       <div className="border-b border-gray-200 pb-10">
         <p className="text-xs uppercase tracking-[0.3em] text-gray-500">
           LUMÉ Collection
         </p>
-
         <div className="mt-4 flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div>
             <h1 className="text-4xl font-light md:text-5xl">The Collection</h1>
-
             <p className="mt-4 max-w-xl text-gray-500">
               Everyday essentials designed with simplicity, comfort, and
               longevity in mind.
             </p>
           </div>
-
-          <p className="text-sm text-gray-500">
-            {filteredProducts.length}{" "}
-            {filteredProducts.length === 1 ? "product" : "products"}
-          </p>
         </div>
       </div>
 
-      <div className="mt-8 flex flex-wrap gap-3 justify-center">
-        {["All", "Men", "Women", "Accessories"].map((category) => (
-          <button
-            key={category}
-            onClick={() => setSelectedCategory(category)}
-            className={`border px-4 py-2 text-sm transition ${
-              selectedCategory === category
-                ? "border-black bg-black text-white"
-                : "border-gray-300 text-gray-600 hover:border-black hover:text-black"
-            }`}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-
-      {/* Products */}
-      {filteredProducts.length === 0 ? (
-        <div className="py-20 text-center">
-          <p className="text-gray-500">
-            No products available in this category.
-          </p>
-        </div>
-      ) : (
-        <div className="grid gap-x-6 gap-y-12 py-12 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product._id} product={product} />
+      <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap gap-3">
+          {["All", "Men", "Women", "Accessories"].map((category) => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`border px-4 py-2 text-sm transition ${
+                selectedCategory === category
+                  ? "border-black bg-black text-white"
+                  : "border-gray-300 text-gray-600 hover:border-black hover:text-black"
+              }`}
+            >
+              {category}
+            </button>
           ))}
         </div>
+
+        <input
+          type="text"
+          placeholder="Search products..."
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          className="w-full max-w-xs border border-gray-300 px-4 py-2 text-sm"
+        />
+      </div>
+
+      {loading ? (
+        <p className="py-20 text-center text-gray-500">Loading collection...</p>
+      ) : products.length === 0 ? (
+        <div className="py-20 text-center">
+          <p className="text-gray-500">No products match your search.</p>
+        </div>
+      ) : (
+        <>
+          <div className="grid gap-x-6 gap-y-12 py-12 sm:grid-cols-2 lg:grid-cols-3">
+            {products.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+          </div>
+
+          {totalPages > 1 && (
+            <div className="mt-4 flex items-center justify-center gap-4">
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="border border-gray-300 px-4 py-2 text-sm disabled:opacity-40"
+              >
+                Previous
+              </button>
+              <span className="text-sm text-gray-500">
+                Page {page} of {totalPages}
+              </span>
+              <button
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="border border-gray-300 px-4 py-2 text-sm disabled:opacity-40"
+              >
+                Next
+              </button>
+            </div>
+          )}
+        </>
       )}
     </main>
   );

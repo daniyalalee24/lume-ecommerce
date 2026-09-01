@@ -10,9 +10,8 @@ function Home() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await getProducts();
-
-        setProducts(data.slice(0, 3));
+        const data = await getProducts({ limit: 3 }); // fetch only 3 products for the homepage
+        setProducts(data.products);
       } catch (error) {
         console.error("Failed to fetch products:", error);
       }

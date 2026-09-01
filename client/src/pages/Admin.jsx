@@ -4,6 +4,7 @@ import useDocumentTitle from "../hooks/useDocumentTitle";
 import ProductForm from "../components/ProductForm";
 import ProductList from "../components/ProductList";
 import OrderManagement from "../components/OrderManagement";
+import { uploadImage } from "../api/upload";
 
 import {
   getProducts,
@@ -38,12 +39,16 @@ function Admin() {
   const [editingId, setEditingId] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Fetch products
+  // Image upload state
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const [uploadingImage, setUploadingImage] = useState(false);
+
+  // Fetch all products
   const fetchProducts = async () => {
     try {
-      const data = await getProducts();
-
-      setProducts(data);
+      const data = await getProducts({ limit: 100 }); // admin sees more at once; add its own pagination later if it grows
+      setProducts(data.products);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -98,20 +103,40 @@ function Admin() {
       sizes: [],
     });
     setEditingId(null);
+    setImageFile(null);
+    setImagePreview("");
   };
 
-  // If we are editing an existing product, update it. Otherwise, create a new product.
+  // Handle image file selection and preview
+  const handleImageFileChange = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file)); // instant local preview, no upload yet
+  };
+
+  // Handle form submission for creating or updating a product
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     if (isSubmitting) return;
 
     setError("");
     setIsSubmitting(true);
 
     try {
+      let imageUrl = formData.image;
+
+      if (imageFile) {
+        setUploadingImage(true);
+        imageUrl = await uploadImage(imageFile, token);
+        setUploadingImage(false);
+      }
+
+      if (!imageUrl) throw new Error("Please select a product image");
+
       const productData = {
         ...formData,
+        image: imageUrl,
         price: Number(formData.price),
       };
 
@@ -127,6 +152,7 @@ function Admin() {
       setError(error.message);
     } finally {
       setIsSubmitting(false);
+      setUploadingImage(false);
     }
   };
 
@@ -142,10 +168,9 @@ function Admin() {
       sizes: product.sizes,
     });
 
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    setImageFile(null);
+    setImagePreview(product.image);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // for handling delete
@@ -227,6 +252,9 @@ function Admin() {
         onSubmit={handleSubmit}
         onCancel={resetForm}
         isSubmitting={isSubmitting}
+        imagePreview={imagePreview}
+        uploadingImage={uploadingImage}
+        onImageFileChange={handleImageFileChange}
       />
 
       {/* Product List */}
