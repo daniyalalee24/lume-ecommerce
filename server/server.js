@@ -1,6 +1,11 @@
+const dotenv = require("dotenv");
+
+// Load environment variables from .env file
+
+dotenv.config();
+
 const express = require("express");
 const cors = require("cors"); // Import the CORS middleware
-const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 
 // Import route files
@@ -10,10 +15,6 @@ const authRoutes = require("./routes/authRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
-
-// Load environment variables from .env file
-
-dotenv.config();
 
 connectDB();
 

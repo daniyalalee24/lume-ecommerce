@@ -53,12 +53,12 @@ function Home() {
             </Link>
           </div>
 
-          <div className="h-[500px] overflow-hidden bg-gray-200 shadow-sm">
+          <div className="order-1 aspect-[4/5] w-full overflow-hidden rounded-2xl bg-stone-200 shadow-lg md:order-2 lg:aspect-square">
             <img
               // Updated minimalist fashion image that pairs beautifully with stone-100
-              src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1000&q=80"
+              src="public/images/image.jpg"
               alt="LUMÉ essential fashion collection"
-              className="h-full w-full object-cover object-center transition-transform duration-700 hover:scale-105"
+              className="h-full w-full object-cover object-[50%_30%] transition-transform duration-700 hover:scale-105"
             />
           </div>
         </div>

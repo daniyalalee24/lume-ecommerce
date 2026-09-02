@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import ProductCard from "../components/ProductCard";
 import { getProducts } from "../api/products";
+import { Link } from "react-router-dom";
+import FAQ from "./faq";
 
 function Shop() {
   useDocumentTitle("Shop | LUMÉ");
@@ -62,7 +64,7 @@ function Shop() {
         </p>
         <div className="mt-4 flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div>
-            <h1 className="text-4xl font-light md:text-5xl">The Collection</h1>
+            <h1 className="text-4xl font-light md:text-5xl">Our Collection</h1>
             <p className="mt-4 max-w-xl text-gray-500">
               Everyday essentials designed with simplicity, comfort, and
               longevity in mind.
@@ -134,6 +136,23 @@ function Shop() {
           )}
         </>
       )}
+
+      {/* Closing CTA */}
+
+      <section className="bg-white">
+        <div className="mx-auto max-w-4xl px-6 py-24 text-center">
+          <h2 className="text-3xl font-light tracking-tight text-gray-900 md:text-4xl">
+            Got questions? We’ve got answers in our FAQ.
+          </h2>
+
+          <Link
+            to="/faq"
+            className="mt-8 inline-block bg-black px-8 py-4 text-sm font-medium uppercase tracking-widest text-white transition-all duration-200 hover:bg-gray-800"
+          >
+            Visit FAQ
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }

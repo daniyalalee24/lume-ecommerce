@@ -13,7 +13,10 @@ import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/OrderSuccess";
 import Orders from "./pages/Orders";
 import Admin from "./pages/Admin";
+import AdminProducts from "./pages/AdminProducts";
+import AdminOrders from "./pages/AdminOrders";
 import AdminRoute from "./components/AdminRoute";
+import FAQ from "./pages/faq";
 
 function App() {
   return (
@@ -33,7 +36,10 @@ function App() {
         <Route path="/orders" element={<Orders />} />
         <Route element={<AdminRoute />}>
           <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/products" element={<AdminProducts />} />
+          <Route path="/admin/orders" element={<AdminOrders />} />
         </Route>
+        <Route path="/faq" element={<FAQ />} />
       </Routes>
 
       <Footer />
