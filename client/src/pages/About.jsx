@@ -32,7 +32,7 @@ function About() {
         <div className="grid items-center gap-12 md:grid-cols-2 md:gap-20">
           <div className="h-[420px] overflow-hidden bg-gray-200 shadow-sm">
             <img
-              src="public/images/about_page.webp"
+              src="/images/about_page.webp"
               alt="LUMÉ essentials, thoughtfully designed"
               className="h-full w-full object-cover object-center"
             />
