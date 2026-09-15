@@ -52,10 +52,6 @@ A full-stack e-commerce web application built with the MERN stack, featuring aut
 - Node.js
 - Express.js
 - MongoDB
-- Mongoose
-- JWT
-- bcrypt
-- Axios
 - Tailwind CSS
 
 ## ✨ Features
