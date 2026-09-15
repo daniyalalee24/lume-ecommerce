@@ -86,5 +86,5 @@ Database: MongoDB Atlas
 Daniyal Ali
 
 GitHub: daniyalalee24
-LinkedIn: Daniyal Ali
+LinkedIn: https://www.linkedin.com/in/daniyalalee/
 ```
