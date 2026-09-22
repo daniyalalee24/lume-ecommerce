@@ -9,7 +9,10 @@ function AdminNavigation() {
     }`;
 
   return (
-    <nav className="border-b border-stone-200 bg-white">
+    <nav
+      className="border-b border-stone-200 bg-white"
+      aria-label="Admin dashboard navigation"
+    >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6">
         {/* 1. Left: Logo */}
         <Link
