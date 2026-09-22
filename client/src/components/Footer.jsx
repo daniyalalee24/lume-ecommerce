@@ -38,6 +38,11 @@ function Footer() {
               <Link to="/about" className="transition-colors hover:text-black">
                 About
               </Link>
+
+              {/* Add the FAQ link here */}
+              <Link to="/faq" className="transition-colors hover:text-black">
+                FAQ
+              </Link>
             </div>
           </div>
 
