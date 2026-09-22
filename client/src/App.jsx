@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -24,6 +23,7 @@ function App() {
       <Navbar />
 
       <Routes>
+        {/* Public and User Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/shop" element={<Shop />} />
@@ -34,6 +34,8 @@ function App() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/order-success/:id" element={<OrderSuccess />} />
         <Route path="/orders" element={<Orders />} />
+
+        {/* Protected Admin Routes */}
         <Route element={<AdminRoute />}>
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/products" element={<AdminProducts />} />
