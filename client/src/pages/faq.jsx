@@ -1,6 +1,6 @@
-import { useState } from "react";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 
+// Static data kept outside the component to prevent recreation on re-renders
 const faqs = [
   {
     question: "How do I place an order?",
@@ -10,7 +10,7 @@ const faqs = [
   {
     question: "What payment methods do you accept?",
     answer:
-      "Payment options available at checkout will be displayed when you place your order.",
+      "Payment options available at checkout will be displayed when you place your order. We typically accept Cash on Delivery and standard card payments.",
   },
   {
     question: "Do you offer Cash on Delivery?",
@@ -57,72 +57,57 @@ const faqs = [
 function FAQ() {
   useDocumentTitle("FAQ | LUMÉ");
 
-  const [openIndex, setOpenIndex] = useState(null);
-
-  const toggleFAQ = (index) => {
-    setOpenIndex((currentIndex) => (currentIndex === index ? null : index));
-  };
-
   return (
-    <main className="bg-white">
-      {/* Header */}
-      <section className="border-b border-gray-200">
-        <div className="mx-auto max-w-4xl px-5 py-16 text-center sm:px-6 sm:py-20 md:py-28">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-gray-400 sm:text-xs">
+    <main className="min-h-screen bg-white">
+      {/* Header Section */}
+      <section className="border-b border-stone-200 bg-[#FAFAFA]">
+        <div className="mx-auto max-w-4xl px-6 py-20 text-center lg:py-32">
+          <p className="text-xs font-bold uppercase tracking-widest text-stone-400">
             Support
           </p>
-
-          <h1 className="mt-4 text-3xl font-light tracking-tight text-gray-900 sm:text-4xl md:text-5xl">
+          <h1 className="mt-6 text-4xl font-light tracking-tight text-zinc-900 md:text-5xl lg:text-6xl">
             Frequently Asked Questions
           </h1>
-
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-gray-500 sm:mt-5 sm:text-base sm:leading-7">
+          <p className="mt-6 text-base text-stone-500">
             Everything you need to know about shopping with LUMÉ.
           </p>
         </div>
       </section>
 
-      {/* FAQ List */}
-      <section className="mx-auto max-w-3xl px-5 py-12 sm:px-6 sm:py-16 md:py-20">
-        <div className="border-y border-gray-200">
-          {faqs.map((faq, index) => {
-            const isOpen = openIndex === index;
-            const answerId = `faq-answer-${index}`;
+      {/* Interactive Native FAQ List */}
+      <section className="mx-auto max-w-3xl px-6 py-16 lg:py-24">
+        <div className="divide-y divide-stone-200 border-t border-stone-200">
+          {faqs.map((faq, index) => (
+            <details
+              key={index}
+              className="group py-6 [&_summary::-webkit-details-marker]:hidden"
+            >
+              <summary className="flex cursor-pointer items-center justify-between gap-4 text-zinc-900 transition-colors hover:text-stone-500 focus:outline-none">
+                <span className="text-base font-medium">{faq.question}</span>
 
-            return (
-              <div
-                key={faq.question}
-                className="border-b border-gray-200 last:border-b-0"
-              >
-                <button
-                  type="button"
-                  onClick={() => toggleFAQ(index)}
-                  aria-expanded={isOpen}
-                  aria-controls={answerId}
-                  className="flex w-full items-center justify-between gap-4 py-5 text-left transition-colors duration-200 hover:text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-4 sm:gap-6 sm:py-6"
-                >
-                  <span className="pr-2 text-sm font-medium leading-6 text-gray-900 sm:text-base">
-                    {faq.question}
-                  </span>
-
-                  <span
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-gray-200 text-lg font-light text-gray-500"
-                    aria-hidden="true"
+                {/* Animated Chevron Icon */}
+                <span className="ml-6 flex shrink-0 items-center justify-center transition-transform duration-300 group-open:rotate-180">
+                  <svg
+                    className="h-5 w-5 text-stone-400 transition-colors group-hover:text-zinc-900"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
-                    {isOpen ? "−" : "+"}
-                  </span>
-                </button>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </span>
+              </summary>
 
-                {isOpen && (
-                  <div id={answerId} className="pb-5 pr-12 sm:pb-6 sm:pr-14">
-                    <p className="text-sm leading-7 text-gray-500">
-                      {faq.answer}
-                    </p>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+              <p className="mt-4 pr-12 text-sm leading-relaxed text-stone-600">
+                {faq.answer}
+              </p>
+            </details>
+          ))}
         </div>
       </section>
     </main>
@@ -130,4 +115,3 @@ function FAQ() {
 }
 
 export default FAQ;
-    
