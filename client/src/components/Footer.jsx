@@ -2,75 +2,83 @@ import { Link } from "react-router-dom";
 
 function Footer() {
   return (
-    <footer className="border-t border-gray-200 bg-white">
-      <div className="mx-auto max-w-7xl px-6 py-12">
-        <div className="grid gap-10 md:grid-cols-3">
-          {/* Brand */}
-          <div>
+    <footer className="border-t border-stone-200 bg-white pt-16 pb-8">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+          {/* Brand & Newsletter (Takes up 2 columns on large screens) */}
+          <div className="sm:col-span-2 lg:col-span-2 lg:pr-12">
             <Link
               to="/"
-              className="text-xl font-light tracking-[0.2em] text-gray-900"
+              className="text-2xl font-bold tracking-[0.2em] text-zinc-900"
             >
               LUMÉ
             </Link>
 
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-gray-500">
+            <p className="mt-6 max-w-md text-sm leading-relaxed text-stone-500">
               Thoughtfully designed essentials for everyday living. Simple
-              silhouettes, quality materials, timeless style.
+              silhouettes, quality materials, and timeless style that moves with
+              you.
             </p>
           </div>
 
           {/* Navigation */}
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-900">
               Explore
             </h3>
 
-            <div className="mt-5 flex flex-col gap-3 text-sm text-gray-600">
-              <Link to="/" className="transition-colors hover:text-black">
-                Home
-              </Link>
-
-              <Link to="/shop" className="transition-colors hover:text-black">
-                Shop
-              </Link>
-
-              <Link to="/about" className="transition-colors hover:text-black">
-                About
-              </Link>
-
-              {/* Add the FAQ link here */}
-              <Link to="/faq" className="transition-colors hover:text-black">
-                FAQ
-              </Link>
-            </div>
+            <ul className="mt-6 space-y-4">
+              {["Home", "Shop", "About", "FAQ"].map((item) => (
+                <li key={item}>
+                  <Link
+                    to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
+                    className="text-sm text-stone-500 transition-colors duration-200 hover:text-zinc-900"
+                  >
+                    {item}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* Account */}
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-900">
               Account
             </h3>
 
-            <div className="mt-5 flex flex-col gap-3 text-sm text-gray-600">
-              <Link to="/cart" className="transition-colors hover:text-black">
-                Cart
-              </Link>
-
-              <Link to="/orders" className="transition-colors hover:text-black">
-                My Orders
-              </Link>
-            </div>
+            <ul className="mt-6 space-y-4">
+              {[
+                { name: "Cart", path: "/cart" },
+                { name: "My Orders", path: "/orders" },
+              ].map((item) => (
+                <li key={item.name}>
+                  <Link
+                    to={item.path}
+                    className="text-sm text-stone-500 transition-colors duration-200 hover:text-zinc-900"
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
         {/* Bottom */}
-        <div className="mt-12 flex flex-col gap-3 border-t border-gray-200 pt-6 text-xs text-gray-400 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} LUMÉ. All rights reserved.</p>
+        <div className="mt-20 flex flex-col items-center justify-between gap-4 border-t border-stone-200 pt-8 sm:flex-row">
+          <p className="text-xs text-stone-400">
+            © {new Date().getFullYear()} LUMÉ. All rights reserved.
+          </p>
 
-          <p>
+          <p className="text-xs text-stone-400">
             Designed & Built by{" "}
-            <span className="font-medium text-gray-600">Daniyal Ali</span>
+            <a
+              href="#"
+              className="font-medium text-stone-500 transition-colors hover:text-zinc-900"
+            >
+              Daniyal Ali
+            </a>
           </p>
         </div>
       </div>

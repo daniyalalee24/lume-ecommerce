@@ -1,242 +1,269 @@
-import { Link, NavLink } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 
-import { useLocation } from "react-router-dom"; // Import useLocation to get the current route
+const links = [
+  { label: "Home", to: "/" },
+  { label: "About", to: "/about" },
+  { label: "Shop", to: "/shop" },
+  { label: "FAQ", to: "/faq" },
+];
+
+const desktopLink = ({ isActive }) =>
+  `relative py-2 text-sm transition-colors ${
+    isActive ? "text-zinc-900" : "text-stone-500 hover:text-zinc-900"
+  }`;
+
+const mobileLink = ({ isActive }) =>
+  `border-b border-stone-100 py-4 text-lg ${
+    isActive ? "text-zinc-900" : "text-stone-500"
+  }`;
 
 function Navbar() {
   const location = useLocation();
-
-  // If the URL path starts with "/admin", do not render this navigation bar
-  if (location.pathname.startsWith("/admin")) {
-    return null;
-  }
-
-  const [menuOpen, setMenuOpen] = useState(false);
-
   const { cartCount } = useCart();
   const { user, logout } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
 
-  const [isAccountOpen, setIsAccountOpen] = useState(false); // State for account dropdown menu
-
-  // Helper function for consistent link styling
-  const navLinkStyle = ({ isActive }) =>
-    `transition-colors duration-200 hover:text-black ${
-      isActive ? "font-medium text-black" : "text-gray-500"
-    }`;
-
-  // Close mobile menu after clicking a link
-  const closeMenu = () => {
+  useEffect(() => {
     setMenuOpen(false);
+    setAccountOpen(false);
+  }, [location.pathname, location.search]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+
+    document.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [menuOpen]);
+
+  if (location.pathname.startsWith("/admin")) return null;
+
+  const closeMenus = () => {
+    setMenuOpen(false);
+    setAccountOpen(false);
   };
 
   const handleLogout = () => {
+    closeMenus();
     logout();
-    setMenuOpen(false);
   };
 
   return (
-    <nav className="border-b border-gray-200 bg-white">
-      <div className="mx-auto max-w-7xl px-6 py-5">
-        <div className="flex items-center justify-between">
-          {/* Left: Logo */}
+    <header className="sticky top-0 z-50">
+      <nav className="relative border-b border-stone-200 bg-white">
+        <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-3 px-4 sm:h-[76px] sm:px-6 lg:px-8">
           <Link
             to="/"
-            onClick={closeMenu}
-            className="text-2xl font-semibold tracking-[0.2em] text-black"
+            onClick={closeMenus}
+            className="shrink-0 text-xl font-bold tracking-[0.16em] text-zinc-900 sm:text-2xl sm:tracking-[0.2em]"
           >
             LUMÉ
           </Link>
 
-          {/* Desktop: Main Navigation */}
-          <div className="hidden flex-1 items-center justify-center gap-8 text-sm md:flex">
-            <NavLink to="/" className={navLinkStyle}>
-              Home
-            </NavLink>
-
-            <NavLink to="/about" className={navLinkStyle}>
-              About
-            </NavLink>
-
-            <NavLink to="/shop" className={navLinkStyle}>
-              Shop
-            </NavLink>
-            <NavLink to="/faq" className={navLinkStyle}>
-              FAQ
-            </NavLink>
+          {/* Desktop navigation */}
+          <div className="hidden items-center gap-6 md:flex lg:gap-8">
+            {links.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                end={link.to === "/"}
+                className={desktopLink}
+              >
+                {link.label}
+              </NavLink>
+            ))}
           </div>
 
-          {/* Right: Desktop User Actions & Cart */}
-          <div className="flex flex-1 items-center justify-end gap-4 text-sm md:gap-5">
-            {user ? (
-              <>
-                {/* My Orders */}
-                <NavLink to="/orders" className={navLinkStyle}>
-                  My Orders
-                </NavLink>
-
-                {/* Cart */}
-                <Link
-                  to="/cart"
-                  className="flex items-center gap-1 font-medium text-black transition-opacity hover:opacity-70"
-                >
-                  Cart <span className="text-gray-500">({cartCount})</span>
-                </Link>
-
-                {/* Account Dropdown */}
-                <div className="relative hidden md:block">
+          <div className="flex shrink-0 items-center gap-3 sm:gap-5">
+            {/* Desktop account */}
+            <div className="relative hidden md:block">
+              {user ? (
+                <>
                   <button
                     type="button"
-                    onClick={() => setIsAccountOpen((isOpen) => !isOpen)}
-                    aria-expanded={isAccountOpen}
-                    className="flex items-center gap-2 text-gray-500 transition-colors duration-200 hover:text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-4"
+                    onClick={() => setAccountOpen((open) => !open)}
+                    aria-expanded={accountOpen}
+                    className="flex max-w-40 items-center gap-2 text-sm text-stone-600 hover:text-zinc-900"
                   >
-                    <span>Hi, {user.name}</span>
-
-                    <span
-                      className={`text-xs transition-transform duration-200 ${
-                        isAccountOpen ? "rotate-180" : ""
-                      }`}
-                      aria-hidden="true"
-                    >
-                      ↓
-                    </span>
+                    <span className="truncate">Hi, {user.name}</span>
+                    <span aria-hidden="true">{accountOpen ? "⌃" : "⌄"}</span>
                   </button>
 
-                  {/* Account Menu */}
-                  {isAccountOpen && (
-                    <div className="absolute right-0 top-full z-50 mt-4 w-48 border border-gray-200 bg-white py-2 shadow-sm">
+                  {accountOpen && (
+                    <div className="absolute right-0 top-full z-50 mt-3 w-48 border border-stone-200 bg-white py-2 shadow-lg">
                       {user.isAdmin && (
-                        <NavLink
+                        <Link
                           to="/admin"
-                          onClick={() => setIsAccountOpen(false)}
-                          className="block px-4 py-3 text-sm text-gray-600 transition-colors duration-200 hover:bg-gray-50 hover:text-black"
+                          onClick={closeMenus}
+                          className="block px-4 py-3 text-sm hover:bg-stone-50"
                         >
                           Admin Panel
-                        </NavLink>
+                        </Link>
                       )}
-
-                      {user.isAdmin && (
-                        <div className="my-1 border-t border-gray-100" />
-                      )}
-
+                      <Link
+                        to="/orders"
+                        onClick={closeMenus}
+                        className="block px-4 py-3 text-sm hover:bg-stone-50"
+                      >
+                        My Orders
+                      </Link>
                       <button
                         type="button"
-                        onClick={() => {
-                          setIsAccountOpen(false);
-                          logout();
-                        }}
-                        className="block w-full px-4 py-3 text-left text-sm text-gray-600 transition-colors duration-200 hover:bg-gray-50 hover:text-black"
+                        onClick={handleLogout}
+                        className="w-full px-4 py-3 text-left text-sm hover:bg-stone-50"
                       >
                         Logout
                       </button>
                     </div>
                   )}
-                </div>
-              </>
-            ) : (
-              <Link
-                to="/login"
-                className="hidden text-gray-500 transition-colors duration-200 hover:text-black md:block"
-              >
-                Login
-              </Link>
-            )}
-
-            {/* Mobile Hamburger Button */}
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="ml-1 flex flex-col gap-1.5 md:hidden"
-              aria-label="Toggle navigation menu"
-              aria-expanded={menuOpen}
-            >
-              <span
-                className={`block h-0.5 w-6 bg-black transition-transform duration-200 ${
-                  menuOpen ? "translate-y-2 rotate-45" : ""
-                }`}
-              ></span>
-
-              <span
-                className={`block h-0.5 w-6 bg-black transition-opacity duration-200 ${
-                  menuOpen ? "opacity-0" : ""
-                }`}
-              ></span>
-
-              <span
-                className={`block h-0.5 w-6 bg-black transition-transform duration-200 ${
-                  menuOpen ? "-translate-y-2 -rotate-45" : ""
-                }`}
-              ></span>
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        {menuOpen && (
-          <div className="flex flex-col gap-5 border-t border-gray-200 pt-5 mt-5 text-sm md:hidden">
-            {/* Main Navigation */}
-            <NavLink to="/" onClick={closeMenu} className={navLinkStyle}>
-              Home
-            </NavLink>
-
-            <NavLink to="/about" onClick={closeMenu} className={navLinkStyle}>
-              About
-            </NavLink>
-
-            <NavLink to="/shop" onClick={closeMenu} className={navLinkStyle}>
-              Shop
-            </NavLink>
-
-            <NavLink to="/faq" onClick={closeMenu} className={navLinkStyle}>
-              FAQ
-            </NavLink>
-
-            {/* User Navigation */}
-            <div className="border-t border-gray-100 pt-5">
-              {user ? (
-                <div className="flex flex-col gap-5">
-                  <span className="text-gray-400">Hi, {user.name}</span>
-
-                  {user.isAdmin && (
-                    <NavLink
-                      to="/admin"
-                      onClick={closeMenu}
-                      className={navLinkStyle}
-                    >
-                      Admin Panel
-                    </NavLink>
-                  )}
-
-                  <NavLink
-                    to="/orders"
-                    onClick={closeMenu}
-                    className={navLinkStyle}
-                  >
-                    My Orders
-                  </NavLink>
-
-                  <button
-                    onClick={handleLogout}
-                    className="w-fit text-left text-gray-500 transition-colors duration-200 hover:text-black"
-                  >
-                    Logout
-                  </button>
-                </div>
+                </>
               ) : (
                 <Link
                   to="/login"
-                  onClick={closeMenu}
-                  className="text-gray-500 transition-colors duration-200 hover:text-black"
+                  className="text-sm text-stone-600 hover:text-zinc-900"
                 >
                   Login
                 </Link>
               )}
             </div>
+
+            {/* Cart */}
+            <Link
+              to="/cart"
+              onClick={closeMenus}
+              aria-label={`Shopping cart, ${cartCount} items`}
+              className="relative flex h-10 w-10 items-center justify-center text-stone-700 hover:text-zinc-900"
+            >
+              <svg
+                aria-hidden="true"
+                className="h-6 w-6"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
+                <path d="M16 11V7a4 4 0 0 0-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+
+              {cartCount > 0 && (
+                <span className="absolute right-0 top-0 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-zinc-900 px-1 text-[10px] text-white">
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
+              )}
+            </Link>
+
+            {/* Mobile menu button */}
+            <button
+              type="button"
+              onClick={() => setMenuOpen((open) => !open)}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
+              className="flex h-10 w-10 flex-col items-center justify-center gap-[5px] md:hidden"
+            >
+              <span
+                className={`h-px w-5 bg-zinc-900 transition-transform ${
+                  menuOpen ? "translate-y-[3px] rotate-45" : ""
+                }`}
+              />
+              <span
+                className={`h-px w-5 bg-zinc-900 transition-opacity ${
+                  menuOpen ? "opacity-0" : ""
+                }`}
+              />
+              <span
+                className={`h-px w-5 bg-zinc-900 transition-transform ${
+                  menuOpen ? "-translate-y-[9px] -rotate-45" : ""
+                }`}
+              />
+            </button>
           </div>
-        )}
-      </div>
-    </nav>
+        </div>
+
+        {/* Mobile menu: solid, full-height panel below the header */}
+        <div
+          id="mobile-menu"
+          aria-hidden={!menuOpen}
+          className={`absolute inset-x-0 top-full z-50 h-[calc(100dvh-68px)] overflow-y-auto overscroll-contain border-t border-stone-100 bg-white px-5 pb-8 pt-5 md:hidden sm:h-[calc(100dvh-76px)] sm:px-8 ${
+            menuOpen ? "block" : "hidden"
+          }`}
+        >
+          <div className="mx-auto flex min-h-full max-w-lg flex-col">
+            <div className="flex flex-col">
+              {links.map((link) => (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  end={link.to === "/"}
+                  onClick={closeMenus}
+                  className={mobileLink}
+                >
+                  {link.label}
+                </NavLink>
+              ))}
+            </div>
+
+            <div className="mt-auto border-t border-stone-200 pt-6">
+              {user ? (
+                <>
+                  <p className="mb-3 break-words text-xs font-semibold uppercase tracking-widest text-stone-400">
+                    Account — {user.name}
+                  </p>
+
+                  {user.isAdmin && (
+                    <Link
+                      to="/admin"
+                      onClick={closeMenus}
+                      className="block py-3 text-stone-600"
+                    >
+                      Admin Panel
+                    </Link>
+                  )}
+
+                  <Link
+                    to="/orders"
+                    onClick={closeMenus}
+                    className="block py-3 text-stone-600"
+                  >
+                    My Orders
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="block py-3 text-stone-600"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <Link
+                  to="/login"
+                  onClick={closeMenus}
+                  className="block w-full bg-zinc-900 px-6 py-4 text-center text-sm font-medium uppercase tracking-widest text-white hover:bg-stone-800"
+                >
+                  Log In or Register
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
   );
 }
 
